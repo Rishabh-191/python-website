@@ -1,32 +1,16 @@
-from flask import Flask, render_template
-import mysql.connector
-
+from flask import Flask, request, render_template
 app = Flask(__name__)
 
-# Connect to MySQL
-db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="Qazxsw1122!@",
-    database="users"
-)
 
-# Create a cursor object
-cursor = db.cursor()
-
-
-@app.route('/')
+@app.route("/")
 def index():
-    # Execute a SQL query
-    cursor.execute("SELECT * FROM `users`")
-    result = cursor.fetchall()
-
-    # Render a template with the query result
-    return render_template('index.html', result=result)
+    return render_template('index.html')
 
 
-# Close the database connection
-db.close()
+@app.route('/submit', methods=['POST'])
+def submit():
+    name = request.form.get('name')
+    return render_template('welcome.html', name=name)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+
+app.run(debug=True)
